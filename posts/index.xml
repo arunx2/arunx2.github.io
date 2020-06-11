@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Articles on Arunachalam Lakshmanan</title>
+    <title>Articles on My Dev Notes</title>
     <link>http://arunx2.github.io/posts/</link>
-    <description>Recent content in Articles on Arunachalam Lakshmanan</description>
+    <description>Recent content in Articles on My Dev Notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Wed, 10 Jun 2020 20:49:32 -0500</lastBuildDate>
     
 	<atom:link href="http://arunx2.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>My First Post with Hugo</title>
+      <link>http://arunx2.github.io/posts/my-first-post/</link>
+      <pubDate>Wed, 10 Jun 2020 20:49:32 -0500</pubDate>
+      
+      <guid>http://arunx2.github.io/posts/my-first-post/</guid>
+      <description>This is my post learning hugo and html</description>
+    </item>
     
   </channel>
 </rss>
