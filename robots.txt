@@ -1,5 +1,2 @@
 User-agent: *
-# robotstxt.org - if ENV production variable is false robots will be disallowed.
-
-  Disallow: /
-
+Sitemap: http://arunx2.github.io/sitemap.xml
