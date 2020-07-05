@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Excerpts</title>
+    <link>http://arunx2.github.io/</link>
+    <description>Recent content on Excerpts</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 04 Jul 2020 20:49:32 -0500</lastBuildDate>
+    
+	<atom:link href="http://arunx2.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Working with application logs</title>
+      <link>http://arunx2.github.io/post/log-with-elk-1/</link>
+      <pubDate>Sat, 04 Jul 2020 20:49:32 -0500</pubDate>
+      
+      <guid>http://arunx2.github.io/post/log-with-elk-1/</guid>
+      <description>A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).
+Collecting logs  Log files - Most applications default behaviour is to write the logs on the file system.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://arunx2.github.io/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://arunx2.github.io/about/</guid>
+      <description>About me A software professional from the Windy city Chicago. Working in media monitoring and search engineering. After spending long time in Java world, now exploring golang. Writing go code is a bliss.
+A volunteer at local Thamil school where more than 250 students learning my native language.</description>
+    </item>
+    
+  </channel>
+</rss>

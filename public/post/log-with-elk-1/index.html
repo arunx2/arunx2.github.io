@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Working with application logs - Excerpts</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Arunachalam Lakshmanan" /><meta name="description" content="A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).
+Collecting logs  Log files - Most applications default behaviour is to write the logs on the file system." /><meta name="keywords" content="golang, elastic, java" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.72.0 with theme even" />
+
+
+<link rel="canonical" href="http://arunx2.github.io/post/log-with-elk-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.78f8f17bab244b9ee62ad16480c9584d5fc2db06ae20681d1ca225cefd80767c.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Working with application logs" />
+<meta property="og:description" content="A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).
+Collecting logs  Log files - Most applications default behaviour is to write the logs on the file system." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://arunx2.github.io/post/log-with-elk-1/" />
+<meta property="article:published_time" content="2020-07-04T20:49:32-05:00" />
+<meta property="article:modified_time" content="2020-07-04T20:49:32-05:00" />
+<meta itemprop="name" content="Working with application logs">
+<meta itemprop="description" content="A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).
+Collecting logs  Log files - Most applications default behaviour is to write the logs on the file system.">
+<meta itemprop="datePublished" content="2020-07-04T20:49:32-05:00" />
+<meta itemprop="dateModified" content="2020-07-04T20:49:32-05:00" />
+<meta itemprop="wordCount" content="649">
+
+
+
+<meta itemprop="keywords" content="blog,elk,log," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Working with application logs"/>
+<meta name="twitter:description" content="A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).
+Collecting logs  Log files - Most applications default behaviour is to write the logs on the file system."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Excerpts</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Excerpts</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Working with application logs</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-07-04 </span>
+        
+          <span class="more-meta"> 649 words </span>
+          <span class="more-meta"> 4 mins read </span>
+        
+      </div>
+    </header>
+
+    
+    <div class="post-content">
+      <p>A small tutorial to work with application logs and analyze them with Elastic and Kibana. In a microservices application architecture, it is important to analyze the logs to understand the health of the application. We can extract several stats from the logs when a log is a strucApplication logs can be generated in multiple ways. They can be either simple logs or print to console (with no time stamps).</p>
+<h2 id="collecting-logs">Collecting logs</h2>
+<ul>
+<li><strong>Log files</strong> - Most applications default behaviour is to write the logs on the file system. They may rolled up by date or size. A simple <a href="https://www.elastic.co/beats/filebeat">file beat</a> process in the server can export the logs to either <a href="https://www.elastic.co/logstash">logstash</a> or <a href="https://www.fluentd.org/">fluentd</a>  or directly to <a href="https://www.elastic.co/elasticsearch/">elastic</a>.
+<ul>
+<li>Advantages:
+<ul>
+<li>Simple file system</li>
+<li>Backups available as long as the file is purged.</li>
+<li>No code changes required.</li>
+</ul>
+</li>
+<li>Disadvantages:
+<ul>
+<li>As many as file exporter processes required to export the logs.</li>
+<li>May miss console outputs.</li>
+<li>In container environment, we need to create a volume for logs and mount them when spinning a container.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Message brokers</strong> - When writing logs into file system, there is a possibility that we need to clean up the disk space regularly. It can be cumbersome in containers (creating a volume and mount to containers). There are language specific log appenders available to push the logs directly from application.
+<ul>
+<li>Advantages:
+<ul>
+<li>No file system</li>
+<li>Log appenders can asynchronysly push logs to message brokers</li>
+<li>Messages can be dropped after TTL</li>
+<li>If the upstream processes are not accessible, logs won&rsquo;t be lost</li>
+</ul>
+</li>
+<li>Disadvantages
+<ul>
+<li>Need infrastructure for message brokers.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Log drivers</strong> - This is more suitable option for legacy application where there are limitted accessability to code or change in application is forbidden.
+<ul>
+<li>Advantages:
+<ul>
+<li>No code change required.</li>
+<li>Everything that application emits including console prints.</li>
+<li>Several log drivers comes by default with docker runtime.</li>
+<li>No additional infrastructure.</li>
+</ul>
+</li>
+<li>Disadvantages:
+<ul>
+<li>There may be data lose with some protocols.</li>
+<li>Some log drivers can cause application hung when the upstream is not processing the data correctly or if not designed correctly.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Collecting logs via message brokers is most reliable option when considering failures in each layer even we need infrastructure for brokers.</p>
+</blockquote>
+<h2 id="best-practices">Best practices</h2>
+<ul>
+<li>Use JSON: Json format logs can be helpful rather than unstructured data.</li>
+<li>One log per function: Try to write one log function per exit point of the function.</li>
+<li>Check for isDebugEnabled: String concatenation is super expensive in any language. Do you message construction after checking the log level as most of the time the debug would be disabled.</li>
+<li>In microservices environment, keep the kafka topic name with some prefix. Just one process is sufficient in processing multiple topics.</li>
+<li>Keep index templates and enable index policies in Kibana. If logs needs to be preserved for long period of time, consider moving them to cold storage after certain period. We can still search them but stored in inexpensive storage.</li>
+</ul>
+<h2 id="sample-logstash-config">Sample logstash config</h2>
+<p>Sample log stash configuration consuming messages from multiple topics of kafka and ingest into individual indices in elastic search.</p>
+<pre><code>input {
+    kafka {
+        codec =&gt; &quot;json&quot;
+        bootstrap_servers =&gt; &quot;broker1:9092,broker2:9092&quot;
+        topics_pattern =&gt; &quot;prefix-.*-logs&quot;
+        group_id =&gt; &quot;consumer_group_id&quot;
+        auto_offset_reset =&gt; &quot;earliest&quot;
+        decorate_events =&gt; true
+        metadata_max_age_ms =&gt; 60000
+        heartbeat_interval_ms =&gt; &quot;250000&quot;
+        session_timeout_ms =&gt; &quot;300000&quot;
+        poll_timeout_ms =&gt; &quot;30000&quot;
+        consumer_threads =&gt; 6
+    }
+}
+
+filter {
+ kv {
+     #default source field is message
+     #source =&gt; &quot;message&quot;
+     field_split_pattern =&gt; &quot;([,\s]+)(?=\w+\s*\=)&quot;
+     transform_key =&gt; &quot;lowercase&quot;
+     recursive =&gt; &quot;true&quot;
+     trim_value =&gt; &quot;&lt;&gt;\[\],&quot;
+
+}
+grok {
+    match =&gt; [ &quot;message&quot;, &quot;%{GREEDYDATA}&quot; ]
+}
+
+mutate {
+    #some languages emits json logs with double quotes. we need to change them to
+    #single quote before parsing as json.
+    gsub =&gt; [
+            &quot;msg&quot;, '&quot;{', &quot;'{&quot;,
+            &quot;msg&quot;, '}&quot;', &quot;}'&quot;
+        ]
+}
+json {
+    source =&gt; &quot;msg&quot;
+}
+date {
+    match =&gt; [&quot;[@metadata][kafka][timestamp]&quot;, &quot;UNIX_MS&quot;]
+    target =&gt;  &quot;@timestamp&quot;
+   }
+ruby {
+    code =&gt; &quot;event.set('[@metadata][kafka][lc_topic]', event.get('[@metadata][kafka][topic]').split(/(?=[A-Z])/).map{|x| x.downcase }.join('_') )&quot;
+  }
+}
+
+output {
+    elasticsearch{
+        index =&gt; &quot;%{[@metadata][kafka][lc_topic]}-%{+YYYY.MM.dd}&quot;
+        hosts =&gt; [&quot;http://host1:9200&quot;, &quot;http://host2:9200&quot;]
+    }
+    #stdout {
+        #codec =&gt; rubydebug { metadata =&gt; true }
+    #}
+}
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Arunachalam Lakshmanan</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2020-07-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/blog/">blog</a>
+          <a href="/tags/elk/">elk</a>
+          <a href="/tags/log/">log</a>
+          </div>
+      <nav class="post-nav">
+        
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:arunachalam@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://twitter.com/larunachalam" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://linkedin.com/in/arunachalam" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://github.com/arunx2" class="iconfont icon-github" title="github"></a>
+  <a href="http://arunx2.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Arunachalam Lakshmanan</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
